@@ -4,14 +4,44 @@ const { buildSchema } = require("graphql");
 
 // construct a schema, using graphql schema language
 const schema = buildSchema(`
+    type RandomDie {
+        numSides: Int!
+        rollOnce: Int!
+        roll(numRolls: Int!): [Int]
+        message: String
+    }
+
+
     type Query {
+        getDie(numSides: Int): RandomDie
         quoteOfTheDay: String
         random: Float!
         rollThreeDice: [Int]
         hello: String
-        rollDice(numDice: Int!, numSides: Int): [Int]
     }
 `);
+
+class RandomDie {
+  constructor(numSides) {
+    this.numSides = numSides;
+  }
+
+  rollOnce() {
+    return 1 + Math.floor(Math.random() * this.numSides);
+  }
+
+  roll({ numRolls }) {
+    const output = [];
+    for (let i = 0; i < numRolls; i++) {
+      output.push(this.rollOnce());
+    }
+    return output;
+  }
+
+  message() {
+    return "RollDie Class";
+  }
+}
 
 // the root providers a resolver function for each API endpoint
 const root = {
@@ -22,13 +52,7 @@ const root = {
     return [1, 2, 3].map(_ => 1 + Math.floor(Math.random() * 6));
   },
   hello: () => "Hello, Wolrd",
-  rollDice: ({ numDice, numSides }) => {
-    const output = [];
-    for (let i = 0; i < numDice; i++) {
-      output.push(1 + Math.floor(Math.random() * (numSides || 6)));
-    }
-    return output;
-  }
+  getDie: ({ numSides }) => new RandomDie(numSides || 6)
 };
 
 // express server
