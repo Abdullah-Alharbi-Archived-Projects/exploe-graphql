@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Get Graphql Message</title>
+  </head>
+  <body>
+    <h1>Get random three numbers</h1>
+    <p id="results"></p>
+
+    <script>
+      const dice = 3;
+      const sides = 6;
+
+      fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: `
+          query RollDice($dice: Int!, $sides: Int) {
+                rollDice(numDice: $dice, numSides: $sides)
+        }`,
+          variables: { dice, sides }
+        })
+      })
+        .then(response => response.json())
+        .then(
+          ({ data }) =>
+            (document.getElementById("results").innerText = data.rollDice.join(
+              ", "
+            ))
+        )
+        .catch(error => console.log(error));
+    </script>
+  </body>
+</html>
