@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Get Graphql Message</title>
+  </head>
+  <body>
+    <h1 id="hello"></h1>
+
+    <script>
+      fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({ query: "{ hello }" })
+      })
+        .then(response => response.json())
+        .then(
+          ({ data }) =>
+            (document.getElementById("hello").innerText = data.hello)
+        )
+        .catch(error => console.log(error));
+    </script>
+  </body>
+</html>

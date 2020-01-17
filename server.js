@@ -11,11 +11,12 @@ const schema = buildSchema(`
 
 // the root providers a resolver function for each API endpoint
 const root = {
-  hello: () => "Hello, World!"
+  hello: () => "Hello, From Graphql Server!"
 };
 
 // express server
 const app = express();
+app.use("/static/", express.static("public"));
 
 app.use(
   "/graphql",
